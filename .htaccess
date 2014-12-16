@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteRule ^all/?$ /list.php [L]
+RewriteRule ^5050/([^/]*)/?(1|2)?$ /index.php?id=$1&choice=$2 [L]
+RewriteRule ^stats/([^/]*)$ /index.php?id=$1&stats [L]
+RewriteRule ^info/([^/]*)$ /fiftyfifty.php?id=$1 [L]
+RewriteRule ^random/?$ /fiftyfifty.php [L]
