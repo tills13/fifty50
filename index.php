@@ -6,13 +6,13 @@
 		$url1 = $_POST["url1"];
 		$url2 = $_POST["url2"];
 
-		$dbconn = pg_connect("dbname=5050 user=_www");
+		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
 		pg_query($dbconn,"INSERT INTO data (id,timestamp,title,option_1,option_2,stats_option_1,stats_option_2) VALUES ('{$id}',extract(epoch from now()), '{$title}', '{$url1}', '{$url2}',0,0);");
 		$short_url = $id;
 	}
 
 	if (!empty($_GET) and !isset($_GET["stats"])) {
-		$dbconn = pg_connect("dbname=5050 user=_www");
+		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
 		$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
 
 		if (!$result) exit("what");
@@ -43,7 +43,7 @@
 	</head>
 	<body align="center">
 		<form method="POST">
-			<div align="center"><a id="main" class="title" href="/"><span>50</span><span>/</span><span>50</span></a></div>
+			<div align="center"><a id="main" class="title" href="/"><span>fifty</span><span>/</span><span>50</span></a></div>
 			<input type="text" name="title" placeholder="title">
 			<input type="text" name="url1" placeholder="url #1">
 			<input type="text" name="url2" placeholder="url #2">
@@ -79,7 +79,7 @@
 			</div>
 			
 		<?php } else if ($stats) { 
-			$dbconn = pg_connect("dbname=5050 user=_www");
+			$dbconn = pg_connect($_ENV["DATABASE_URL"]);
 			$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
 			$stats_option_1 = max($result["stats_option_1"], 1);
 			$stats_option_2 = max($result["stats_option_2"], 1);
@@ -123,7 +123,7 @@
 		<?php } else { ?>
 			<div class="recents">
 				<div id="recents" class="title">recent <span>50</span><span>/</span><span>50</span>s</div> 
-				<?php $recents = pg_fetch_all(pg_query(pg_connect("dbname=5050 user=_www"), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
+				<?php $recents = pg_fetch_all(pg_query(pg_connect($_ENV["DATABASE_URL"]), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
 				<?php if (!$recents) { ?> <div class="nada">nothing here yet...</div>  <?php } ?>
 				<?php foreach ($recents as $index => $recent) { ?>
 					<div class="recent">

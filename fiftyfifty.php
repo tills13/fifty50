@@ -1,6 +1,6 @@
 <?php
 	include_once("php/functions.php");
-	$dbconn = pg_connect("dbname=5050 user=_www");
+	$dbconn = pg_connect($_ENV["DATABASE_URL"]);
 	if (isset($_GET["id"]) and ($_GET["id"] != "")) $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}'"))[0];
 	else $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data ORDER BY random() LIMIT 1;"))[0];
 	
@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="/js/jquery.js"></script>
 	</head>
 	<body>
-		<a id="main" class="title rand" href="/"><span>50</span><span>/</span><span>50</span></a>
+		<a id="main" class="title rand" href="/"><span>fifty</span><span>/</span><span>50</span></a>
 		<div id="random" class="title">[<span><?=$result["title"]?></span>]</div>
 
 		<div class="random">
