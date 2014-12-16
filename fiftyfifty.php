@@ -1,6 +1,7 @@
 <?php
 	include_once("php/functions.php");
 	$dbconn = pg_connect($_ENV["DATABASE_URL"]);
+	//$dbconn = pg_connect("dbname=5050 user=_www");
 	if (isset($_GET["id"]) and ($_GET["id"] != "")) $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}'"))[0];
 	else $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data ORDER BY random() LIMIT 1;"))[0];
 	

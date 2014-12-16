@@ -12,6 +12,7 @@
 
 		<div class="list">
 			<?php $recents = pg_fetch_all(pg_query(pg_connect($_ENV["DATABASE_URL"]), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc;")); ?>
+			<?php //$recents = pg_fetch_all(pg_query(pg_connect("dbname=5050 user=_www"), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc;")); ?>
 			<?php if (!$recents) { ?> <div class="nada">nothing here yet...</div>  <?php } ?>
 			<?php foreach ($recents as $index => $recent) { ?>
 				<div class="recent">

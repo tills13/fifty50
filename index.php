@@ -7,19 +7,27 @@
 		$url2 = $_POST["url2"];
 
 		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
+		//$dbconn = pg_connect("dbname=5050 user=_www");
 		pg_query($dbconn,"INSERT INTO data (id,timestamp,title,option_1,option_2,stats_option_1,stats_option_2) VALUES ('{$id}',extract(epoch from now()), '{$title}', '{$url1}', '{$url2}',0,0);");
 		$short_url = $id;
 	}
 
 	if (!empty($_GET) and !isset($_GET["stats"])) {
 		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
-		$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
+		//$dbconn = pg_connect("dbname=5050 user=_www");
+		$result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
 
 		if (!$result) exit("what");
 		else {
-			$which = (isset($_GET["choice"]) and ($_GET["choice"] != "")) ? $_GET["choice"] : (((rand() % 10) > 5) ? 1 : 2);
-			$url = $result["option_" . $which];
+			pg_query($dbconn, "DELETE FROM connections WHERE (extract(epoch from now()) - timestamp) > 90;");
+			$check = pg_fetch_all(pg_query($dbconn, "SELECT * FROM connections WHERE ip='{$_SERVER["REMOTE_ADDR"]}' AND ff_id='{$_GET["id"]}';"))[0];
 
+			if (!$check) {
+				$which = (isset($_GET["choice"]) and ($_GET["choice"] != "")) ? $_GET["choice"] : (((rand() % 10) > 5) ? 1 : 2);
+				pg_query($dbconn, "INSERT INTO connections (ff_id,ip,timestamp,image_served) VALUES ('{$_GET["id"]}', '{$_SERVER["REMOTE_ADDR"]}', extract(epoch from now()), {$which});");
+			} else $which = $check["image_served"];
+		
+			$url = $result["option_" . $which];
 			pg_query($dbconn,"UPDATE data SET stats_option_{$which}=stats_option_{$which} + 1 WHERE id='{$_GET["id"]}';");
 			print($url);
 			//var_dump(preg_match_all("^http(s)?:\/\/.*", $url, $matches));
@@ -80,6 +88,7 @@
 			
 		<?php } else if ($stats) { 
 			$dbconn = pg_connect($_ENV["DATABASE_URL"]);
+			//$dbconn = pg_connect("dbname=5050 user=_www");
 			$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
 			$stats_option_1 = max($result["stats_option_1"], 1);
 			$stats_option_2 = max($result["stats_option_2"], 1);
@@ -124,6 +133,7 @@
 			<div class="recents">
 				<div id="recents" class="title">recent <span>50</span><span>/</span><span>50</span>s</div> 
 				<?php $recents = pg_fetch_all(pg_query(pg_connect($_ENV["DATABASE_URL"]), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
+				<?php //$recents = pg_fetch_all(pg_query(pg_connect("dbname=5050 user=_www"), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
 				<?php if (!$recents) { ?> <div class="nada">nothing here yet...</div>  <?php } ?>
 				<?php foreach ($recents as $index => $recent) { ?>
 					<div class="recent">
