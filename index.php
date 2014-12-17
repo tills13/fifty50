@@ -6,10 +6,20 @@
 		$url1 = $_POST["url1"];
 		$url2 = $_POST["url2"];
 
-		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
-		//$dbconn = pg_connect("dbname=5050 user=_www");
-		pg_query($dbconn,"INSERT INTO data (id,timestamp,title,option_1,option_2,stats_option_1,stats_option_2) VALUES ('{$id}',extract(epoch from now()), '{$title}', '{$url1}', '{$url2}',0,0);");
-		$short_url = $id;
+		if (strlen($title) < 5) $error["title"] = "error";
+		if (strlen($url1) == 0) $error["url1"] = "error";
+		if (strlen($url2) == 0) $error["url2"] = "error";
+		if ($url1 == $url2) $error["url1"] = $error["url2"] = "error";
+
+		if (!$error) {
+			$dbconn = pg_connect($_ENV["DATABASE_URL"]);
+			pg_query($dbconn,"INSERT INTO data (id,timestamp,title,option_1,option_2,stats_option_1,stats_option_2) VALUES ('{$id}',extract(epoch from now()), '{$title}', '{$url1}', '{$url2}',0,0);");
+			$short_url = $id;
+		} else {
+			$cache["title"] = $title;
+			$cache["url1"] = $url1;
+			$cache["url2"] = $url2;
+		}
 	}
 
 	if (!empty($_GET) and !isset($_GET["stats"])) {
@@ -52,9 +62,9 @@
 	<body align="center">
 		<form method="POST">
 			<div align="center"><a id="main" class="title" href="/"><span>fifty</span><span>/</span><span>50</span></a></div>
-			<input type="text" name="title" placeholder="title">
-			<input type="text" name="url1" placeholder="url #1">
-			<input type="text" name="url2" placeholder="url #2">
+			<input class="<?=$error["title"]?>" type="text" name="title" value="<?=$cache["title"]?>" placeholder="title">
+			<input class="<?=$error["url1"]?>" type="text" name="url1" value="<?=$cache["url1"]?>" placeholder="url #1">
+			<input class="<?=$error["url2"]?>" type="text" name="url2" value="<?=$cache["url2"]?>" placeholder="url #2">
 			<div><a href="/random"><i class="fa fa-random random"></i><a href="/all"><i class="fa fa-list random"></i></a><input type="submit"></div>
 			
 		</form>

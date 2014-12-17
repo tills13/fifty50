@@ -37,6 +37,7 @@ form,.url,.recents,.stats {
 
 	
 	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	border-radius: 2px;
 	vertical-align: top;
 }
@@ -76,11 +77,11 @@ input {
 	padding: 9;
 	margin: 9 0;
 	
-	font: 100 15 "Open Sans";
+	font: 100 20 "Open Sans";
 	color: #2B303B;
 	
 	border-radius: 2px;
-	border: 1px solid white;
+	border: none;
 	box-shadow: 0 0 10px #2B303B;
 	background: white;
 	outline: none;
@@ -108,6 +109,9 @@ input#delete {
 input[type="submit"]:hover { color: white; background: #80d480; }
 input#delete:hover { color: white; background: #d48080; }
 
+input.error { background: #ff6667; }
+input.error::-webkit-input-placeholder { color: white; }
+
 .recent {
 	display: flex;
 	display: -webkit-flex;
@@ -119,6 +123,7 @@ input#delete:hover { color: white; background: #d48080; }
 	-webkit-align-items: center;
 
 	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	border-radius: 2px; 
 	transition: max-height 0.2s ease, background 0.2s ease; 
 }
@@ -145,6 +150,7 @@ input#delete:hover { color: white; background: #d48080; }
 a.stat_url { color: white; }
 .stat {
 	display: flex;
+	display: -webkit-flex;
 	height: 50px;
 	width: 100%; 
 }
@@ -174,8 +180,8 @@ a.stat_url { color: white; }
 #option_1 .count { float: right; background: coral; vertical-align: top; }
 #option_2 .count { float: left; background: white; vertical-align: top; }
 
-div.random { display: flex; flex-direction: row; width: 100%; padding: 18 0; box-sizing: border-box; height: 400px; }
-div.random .option { display: flex; justify-content: center; -webkit-align-items: center; font: 100 50 "Open Sans"; color: coral; text-align: center; background: white; width: 50%; }
+div.random { display: flex; display: -webkit-flex; flex-direction: row; width: 100%; padding: 18 0; box-sizing: border-box; -webkit-box-sizing: border-box; height: 400px; }
+div.random .option { display: flex; display: -webkit-flex; justify-content: center; -webkit-justify-content: center; -webkit-align-items: center; font: 100 50 "Open Sans"; color: coral; text-align: center; background: white; width: 50%; }
 div.random .option .perc { padding-left: 9px; color: #2B303B; font-size: 0.5em; }
 div.random .option:hover { background: coral; color: white; }
 div.random .option:first-child { border-radius: 4 0 0 4; }
@@ -189,6 +195,7 @@ div.random .option:last-child { border-radius: 0 4 4 0; }
 	font: 100 15 "Open Sans";
 	text-align: right;
 	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 
 .tips:first-child {  }
