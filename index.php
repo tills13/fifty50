@@ -59,99 +59,137 @@
 		<link rel="stylesheet" type="text/css" href="/style/style.css">
 		<script type="text/javascript" src="/js/jquery.js"></script>
 	</head>
-	<body align="center">
-		<form method="POST">
-			<div align="center"><a id="main" class="title" href="/"><span>fifty</span><span>/</span><span>50</span></a></div>
-			<input class="<?=$error["title"]?>" type="text" name="title" value="<?=$cache["title"]?>" placeholder="title">
-			<input class="<?=$error["url1"]?>" type="text" name="url1" value="<?=$cache["url1"]?>" placeholder="url #1">
-			<input class="<?=$error["url2"]?>" type="text" name="url2" value="<?=$cache["url2"]?>" placeholder="url #2">
-			<div><a href="/random"><i class="fa fa-random random"></i><a href="/all"><i class="fa fa-list random"></i></a><input type="submit"></div>
-			
-		</form>
-
-		<?php if (!empty($short_url)) { ?> 
-			<div class="url" href="/5050/<?=$short_url?>">
-				<div id="url" class="title">here's your 50/50</div>
-
-				<div class="recent active" href="5050/<?=$short_url?>">
-					<div class="title"><?=$title?></div>
-					<div class="ago">now</div>
-				</div> 
-
-				<div id="url" class="title">share via</div>
-
-				<a href="http://www.reddit.com/r/fiftyfifty/submit?title=<?=$title?>&url=<?=$_SERVER["HTTP_HOST"]?>/5050/<?=$short_url?>">
-					<i class="fa fa-reddit"></i>
-					<span id="url">reddit</span>
-				</a>
-
-				<a href="https://twitter.com/share?url=<?=$_SERVER["HTTP_HOST"]?>/5050/<?=$short_url?>&text=<?=title?>">
-					<i class="fa fa-twitter"></i>
-					<span id="url">twitter</span>
-				</a>
-
-				<a href="5050/<?=$short_url?>">
-					<i class="fa fa-chain"></i>
-					<span id="url"><?=$short_url?></span>
-				</a>
-			</div>
-			
-		<?php } else if ($stats) { 
-			$dbconn = pg_connect($_ENV["DATABASE_URL"]);
-			//$dbconn = pg_connect("dbname=5050 user=_www");
-			$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
-			$stats_option_1 = max($result["stats_option_1"], 1);
-			$stats_option_2 = max($result["stats_option_2"], 1);
-
-			$total = $stats_option_1 + $stats_option_2;
-			$url_width_1 = max(($stats_option_1 / $total * 100), 25);
-			$url_width_2 = max(100 - $url_width_1, 25); ?>
-		<div class="stats">
-			<div id="stats" class="title">stats</div> 
-				<div class="stat_options"><?=$result["id"]?> [<a href="#">toggle urls</a>]</div>
-		<?php if ($total > 10) { ?>
-				<div class="stat">
-					<div id="option_1" style="width: <?=$url_width_1?>%;">
-						<div class="label hidden">URL #1</div>
-						<div class="label"><a href="<?=$result["option_1"]?>" target="_blank"><?=$result["option_1"]?></a></div>
-						<span class="count"><?=short_num($result["stats_option_1"])?></span>
+	<body>
+		<div class="content">
+			<form method="POST">
+				<div align="center"><a id="main" class="title" href="/"><span>fifty</span><span>/</span><span>50</span></a></div>
+				<div class="fl-container">
+					<div class="fl-label">
+						<span class="title">title</span>
+						<span class="extra"></span>
 					</div>
-					<div id="option_2" style="width: <?=$url_width_2?>%;">
-						<div class="label hidden">URL #2</div>
-						<div class="label"><a href="<?=$result["option_2"]?>" target="_blank"><?=$result["option_2"]?></a></div>
-						<span class="count"><?=short_num($result["stats_option_2"])?></span>
+					<input class="fl-input min-length" type="text" name="title" placeholder="title" autocomplete="off">	
+				</div>
+				<div class="fl-container">
+					<div class="fl-label">
+						<span class="title">url #1</span>
+						<span class="extra"></span>
 					</div>
-				</div> 
-				<div class="tips">stats are fuzzed below a certain threshold</div>
+					<input class="fl-input is-url" type="text" name="url1" placeholder="url #1" autocomplete="off">	
+				</div>
+				<div class="fl-container">
+					<div class="fl-label">
+						<span class="title">url #2</span>
+						<span class="extra"></span>
+					</div>
+					<input class="fl-input is-url" type="text" name="url2" placeholder="url #2" autocomplete="off">	
+				</div>
+
+				<div><a href="/random"><i class="fa fa-random random"></i><a href="/all"><i class="fa fa-list random"></i></a><input type="submit"></div>
 				<script type="text/javascript">
-					$(".stat_options a").click(function() {
-						var showing = $(".label:visible");
-						var hidden = $(".label:not(:visible)");
+					$(".fl-input").keyup(function() {
+						var val = $(this).val();
+						var container = $(this).parents(".fl-container");
+						var fl = container.children(".fl-label");
 
-						showing.toggleClass("hidden");
-						hidden.toggleClass("hidden");
+						if (val === "") { container.animate({ padding: 9 }); fl.animate({ opacity: 0, top: 18 }); $(this).animate({ top: 0 }); }
+						else { container.animate({ padding: "18 9" }); fl.animate({ opacity: 1, top: 9 }); $(this).animate({ top: 9 }); }
+
+						if ($(this).hasClass("is-url")) { if (check_url($(this).val())) { fl.children(".extra").removeClass("bad").addClass("good"); } else { fl.children(".extra").removeClass("good").addClass("bad"); } }
+						//if ($(this).hasClass("min-length"))
 					});
+
+
+					var check_url = function(val) {
+						return val.match(/((https?:\/\/)[\w-]+(\.[\w-]+)+\.?(\/\S*)?)/);
+					}
 				</script>
-		<?php } else { ?>
-				<div class="stat disabled">
-					<div id="option_1">not enough data</div>
-				</div> 
-		<?php } ?>
-				<input type="button" id="delete" value="mark as broken">
-			</div>
-		<?php } else { ?>
-			<div class="recents">
-				<div id="recents" class="title">recent <span>50</span><span>/</span><span>50</span>s</div> 
-				<?php $recents = pg_fetch_all(pg_query(pg_connect($_ENV["DATABASE_URL"]), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
-				<?php //$recents = pg_fetch_all(pg_query(pg_connect("dbname=5050 user=_www"), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
-				<?php if (!$recents) { ?> <div class="nada">nothing here yet...</div>  <?php } ?>
-				<?php foreach ($recents as $index => $recent) { ?>
-					<div class="recent">
-						<div class="title"><a href="/info/<?=$recent["id"]?>"><?=$recent["title"]?></a></div>
-						<div class="ago"><?=ago($recent["timestamp"])?> [<a class="stat_url" href="/stats/<?=$recent["id"]?>">stats</a>]</div>
-					</div>
-				<?php } ?>
-			</div>
-		<?php } ?>
+			</form>
+
+			<?php if (!empty($short_url)) { ?> 
+				<div class="url" href="/5050/<?=$short_url?>">
+					<div id="url" class="title">here's your 50/50</div>
+
+					<div class="recent active" href="5050/<?=$short_url?>">
+						<div class="title"><?=$title?></div>
+						<div class="ago">now</div>
+					</div> 
+
+					<div id="url" class="title">share via</div>
+
+					<a href="http://www.reddit.com/r/fiftyfifty/submit?title=<?=$title?>&url=<?=$_SERVER["HTTP_HOST"]?>/5050/<?=$short_url?>">
+						<i class="fa fa-reddit"></i>
+						<span id="url">reddit</span>
+					</a>
+
+					<a href="https://twitter.com/share?url=<?=$_SERVER["HTTP_HOST"]?>/5050/<?=$short_url?>&text=<?=title?>">
+						<i class="fa fa-twitter"></i>
+						<span id="url">twitter</span>
+					</a>
+
+					<a href="5050/<?=$short_url?>">
+						<i class="fa fa-chain"></i>
+						<span id="url"><?=$short_url?></span>
+					</a>
+				</div>
+				
+			<?php } else if ($stats) { 
+				$dbconn = pg_connect($_ENV["DATABASE_URL"]);
+				//$dbconn = pg_connect("dbname=5050 user=_www");
+				$result = pg_fetch_all(pg_query($dbconn,"SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
+				$stats_option_1 = max($result["stats_option_1"], 1);
+				$stats_option_2 = max($result["stats_option_2"], 1);
+
+				$total = $stats_option_1 + $stats_option_2;
+				$url_width_1 = max(($stats_option_1 / $total * 100), 25);
+				$url_width_2 = max(100 - $url_width_1, 25); ?>
+			<div class="stats">
+				<div id="stats" class="title">stats</div> 
+					<div class="stat_options"><?=$result["id"]?> [<a href="#">toggle urls</a>]</div>
+			<?php if ($total > 10) { ?>
+					<div class="stat">
+						<div id="option_1" style="width: <?=$url_width_1?>%;">
+							<div class="label hidden">URL #1</div>
+							<div class="label"><a href="<?=$result["option_1"]?>" target="_blank"><?=$result["option_1"]?></a></div>
+							<span class="count"><?=short_num($result["stats_option_1"])?></span>
+						</div>
+						<div id="option_2" style="width: <?=$url_width_2?>%;">
+							<div class="label hidden">URL #2</div>
+							<div class="label"><a href="<?=$result["option_2"]?>" target="_blank"><?=$result["option_2"]?></a></div>
+							<span class="count"><?=short_num($result["stats_option_2"])?></span>
+						</div>
+					</div> 
+					<div class="tips">stats are fuzzed below a certain threshold</div>
+					<script type="text/javascript">
+						$(".stat_options a").click(function() {
+							var showing = $(".label:visible");
+							var hidden = $(".label:not(:visible)");
+
+							showing.toggleClass("hidden");
+							hidden.toggleClass("hidden");
+						});
+					</script>
+			<?php } else { ?>
+					<div class="stat disabled">
+						<div id="option_1">not enough data</div>
+					</div> 
+			<?php } ?>
+					<input type="button" id="delete" value="mark as broken">
+				</div>
+			<?php } else { ?>
+				<div class="recents">
+					<div id="recents" class="title">recent <span>50</span><span>/</span><span>50</span>s</div> 
+					<?php $recents = pg_fetch_all(pg_query(pg_connect($_ENV["DATABASE_URL"]), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
+					<?php //$recents = pg_fetch_all(pg_query(pg_connect("dbname=5050 user=_www"), "SELECT id,title,timestamp FROM data ORDER BY timestamp desc LIMIT 4;")); ?>
+					<?php if (!$recents) { ?> <div class="nada">nothing here yet...</div>  <?php } ?>
+					<?php foreach ($recents as $index => $recent) { ?>
+						<div class="recent">
+							<div class="title"><a href="/info/<?=$recent["id"]?>"><?=$recent["title"]?></a></div>
+							<div class="ago"><?=ago($recent["timestamp"])?> [<a class="stat_url" href="/stats/<?=$recent["id"]?>">stats</a>]</div>
+						</div>
+					<?php } ?>
+				</div>
+			<?php } ?>
+		</div>
 	</body>
 </html>

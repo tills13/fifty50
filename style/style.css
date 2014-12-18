@@ -1,7 +1,24 @@
 a { text-decoration: none; }
 body {
-	background: #2B303B;
 	padding: 36;
+	background: #2B303B;
+}
+
+.content {
+	position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+	display: flex;
+	display: -webkit-flex;
+	padding: 36;
+	
+	justify-content: center;
+	-webkit-justify-content: center;
+	-webkit-align-items: center;
+	overflow: scroll;
+}
+
+@media screen and (max-width: 900px) {
+	.content { flex-direction: column; }
+	form,.url,.recents,.stats { max-height: 10000; }
 }
 
 #main.title,
@@ -22,19 +39,16 @@ body {
 .title span:nth-child(odd) { color: white; }
 #main.title:hover span:nth-child(even) { color: white; }
 #main.title:hover span:nth-child(odd) { color: coral; }
-i.random { padding: 0 9; font-weight: 100; font-size: 30; color: white; line-height: 42px; float: right; }
+i.random { padding: 0 9; font-weight: 100; font-size: 30; color: white; line-height: 50px; float: right; }
 
 form,.url,.recents,.stats {
 	position: relative; 
-	top: 50%;
-	display: inline-block;
-	height: 450px;
-	width: 40%;
-	padding: 0 18;
-	margin-top: -200px;
+	
+	padding: 36; padding-top: 18; 
+	min-width: 450px;
+	max-width: 40%;
 	
 	text-align: center;
-
 	
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -54,6 +68,12 @@ form,.url,.recents,.stats {
 #random.title { text-align: left; font-size: 30; line-height: 55px; }
 #random.title span .hightlight { color: coral; }
 
+form {
+	background: indianred;
+	border-radius: 2px;
+	box-shadow: inset 0 0 5px black;
+}
+
 .url .recent { margin-bottom: 18px; }
 .url a {
 	display: inline-block;
@@ -71,28 +91,55 @@ form,.url,.recents,.stats {
 .url a:hover { background: white; }
 .url a:hover { color: #2B303B !important; }
 
-input {
-	display: block;
+.fl-container {
+	text-align: left;
+	padding: 9; margin: 9 0; 
+	position: relative;
+	border: 1px solid #5f6c84;
+	border-radius: 2px;
+	background: white;
+}
+
+.fl-input {
+	position: relative;
 	width: 100%;
-	padding: 9;
-	margin: 9 0;
-	
 	font: 100 20 "Open Sans";
 	color: #2B303B;
-	
-	border-radius: 2px;
+
 	border: none;
-	box-shadow: 0 0 10px #2B303B;
-	background: white;
+	background: none;
 	outline: none;
+	
+	z-index: 1;
 }
+
+.fl-label {
+	opacity: 0;
+	position: absolute;
+	top: 18; left: 9; right: 9; 
+	font: 100 10 "Open Sans";
+	color: black;
+	z-index: 0;
+}
+
+.fl-label .extra { float: right; }
+.fl-label .extra.good { color: darkgreen; }
+.fl-label .extra.bad { color: darkred; }
+
+.fl-label .extra.good:after { font-family: FontAwesome; color: darkgreen; content: "\f00c"; }
+.fl-label .extra.bad:after { font-family: FontAwesome; color: darkred; content: "\f00d"; }
 
 input[type="submit"] {
 	width: 200px;
-	margin: 0;
+	margin: 0; padding: 9 18;
 	color: #80d480;
-	vertical-align: top;
 	
+	font: 100 20 "Open Sans";
+	background: white;
+	border: 1px solid #5f6c84;
+	border-radius: 2px;
+	
+	float: left;
 	cursor: pointer;
 }
 

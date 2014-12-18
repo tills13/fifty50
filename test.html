@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="/style/font-awesome.css">
+		<style type="text/css">
+			body { -webkit-font-smoothing: antialiased; }
+			h1,form { padding: 0; margin: 0; font-family: "Roboto"; font-weight: 100;}
+			h1 { padding: 18; text-align: center; color: white; }
+			body {
+				display: flex;
+				display: -webkit-flex;
+				flex-direction: column;
+				
+				-webkit-align-items: center;
+				justify-content: center;
+				-webkit-justify-content: center;
+				background: #2B303B;
+			}
+
+			.container {
+				position: relative; 
+				display: flex;
+				display: -webkit-flex;
+				padding: 18;
+				
+				-webkit-align-items: center;
+				
+				background: white;
+				border-radius: 2px;
+				box-shadow: inset 0 0 5px black;
+			}
+
+			.logo {
+				position: relative;
+				left: -18px;
+				font-size: 100px; 
+				min-width: 200px;
+				color: #2B303B;
+				
+				text-align: center;
+			}
+
+			input {
+				display: block;
+				
+				padding: 9;
+				margin: 9 0;
+				
+				font: 100 20 "Open Sans";
+				color: #2B303B;
+				
+				border-radius: 2px;
+				border: 1px solid #5f6c84;
+				background: white;
+				outline: none;
+			}
+
+			input:first-child { margin-top: 0; }
+
+			input[type="button"] {
+				width: 50%;
+				margin: 0;
+				color: #80d480;
+				vertical-align: top;
+				float: right;
+				
+				cursor: pointer;
+			}
+
+			.forgot {
+				text-align: left;
+				color: #2B303B;
+				font: 100 15/45px "Open Sans";
+				text-decoration: none;
+			}
+
+			@media screen and (max-width: 800px) {
+				.container { flex-direction: column; }
+				.logo { left: 0; padding: 18 0; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<span class="fa fa-facebook logo"></span>
+			<form>
+				<input type="text" name="user" placeholder="username">
+				<input type="password" name="pass" placeholder="password">
+				<div><a href="" class="forgot">forgot password?</a href=""><input type="button" value="login"></div>
+			</form>
+		</div>
+	</body>
+</html>
