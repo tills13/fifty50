@@ -4,6 +4,8 @@
 	//$dbconn = pg_connect("dbname=5050 user=_www");
 	if (isset($_GET["id"]) and ($_GET["id"] != "")) $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}'"))[0];
 	else $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data ORDER BY random() LIMIT 1;"))[0];
+
+	pg_query($dbconn,"UPDATE data SET views=views + 1 WHERE id='{$result["id"]}';");
 	
 	$stats_option_1 = max($result["stats_option_1"], 1);
 	$stats_option_2 = max($result["stats_option_2"], 1);
@@ -15,14 +17,14 @@
 
 <html>
 	<head>
-		<title>50/50 [<?=$result["id"]?>]</title>
+		<title>fifty/50 [<?=$result["id"]?>]</title>
 		<link rel="stylesheet" type="text/css" href="/style/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="/style/style.css">
 		<script type="text/javascript" src="/js/jquery.js"></script>
 	</head>
 	<body>
-		<a id="main" class="title rand" href="/"><span>fifty</span><span>/</span><span>50</span></a>
-		<div id="random" class="title">[<span><?=$result["title"]?></span>]</div>
+		<a class="title dark-bg" href="/"><span>FIFTY</span><span>/</span><span>50</span></a>
+		<div class="subtitle"><span class="highlight">[</span><span><?=$result["title"]?></span><span class="highlight">]</span></div>
 
 		<div class="random">
 			<a class="option" href="/5050/<?=$result["id"]?>/1" style="width: <?=$url_width_1?>%;">URL #1 <span class="perc">[<?=round($stats_option_1 / $total * 100)?>%]</span></a>
@@ -31,7 +33,7 @@
 		</div>
 	
 		<div class="tips">you can see the URLs <a href="/stats/<?=$result["id"]?>">here</a>, if you must</div>
-		<div class="tips">seen by <?=($result["stats_option_1"] + 0 + $result["stats_option_2"])?> <?=(($result["stats_option_1"] + 0 + $result["stats_option_2"]) != 1) ? "people" : "person"?></div>
+		<div class="tips">seen by <?=($result["views"])?> <?=(($result["stats_option_1"] + 0 + $result["stats_option_2"]) != 1) ? "people" : "person"?></div>
 		
 
 		<script type="text/javascript">

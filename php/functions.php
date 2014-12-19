@@ -1,5 +1,6 @@
 <?php
 	//$_ENV["DATABASE_URL"] = "postgres://sbsxepwumaqdhr:lhzRzhSQlZ5UEJ1rEyLtZl5BAV@ec2-54-235-193-41.compute-1.amazonaws.com:5432/d425a208g2epka";
+	$_ENV["DATABASE_URL"] = "dbname=5050 user=_www";
 	function ago($time) {
 		$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
 		$lengths = array("60", "60", "24", "7", "4.35", "12", "10");
