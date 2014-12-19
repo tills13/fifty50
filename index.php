@@ -119,7 +119,7 @@
 					<div class="title dark-bg">here's your <span>FIFTY</span><span>/</span><span>50</span></div>
 
 					<div id="preview" class="fifty-fifty highlight" href="/5050/<?=$short_url?>">
-						<div class="title"><?=$title?></div>
+						<div class="title"><?=$_POST["title"]?></div>
 						<div class="ago">now</div>
 					</div> 
 
