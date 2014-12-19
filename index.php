@@ -2,9 +2,9 @@
 	include_once("php/functions.php");
 	if (!empty($_POST)) {
 		$id = uniqid();
-		$title = $_POST["title"];
-		$url1 = $_POST["url1"];
-		$url2 = $_POST["url2"];
+		$title = pg_escape_string($_POST["title"]);
+		$url1 = pg_escape_string($_POST["url1"]);
+		$url2 = pg_escape_string($_POST["url2"]);
 
 		if (strlen($title) < 5) $error["title"] = "error";
 		if (strlen($url1) == 0) $error["url1"] = "error";
