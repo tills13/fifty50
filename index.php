@@ -26,7 +26,7 @@
 		$dbconn = pg_connect($_ENV["DATABASE_URL"]);
 		$result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}';"))[0];
 
-		if (!$result) exit("what");
+		if (!$result) exit("wat");
 		else {
 			pg_query($dbconn, "DELETE FROM connections WHERE (extract(epoch from now()) - timestamp) > 90;");
 			$check = pg_fetch_all(pg_query($dbconn, "SELECT * FROM connections WHERE ip='{$_SERVER["REMOTE_ADDR"]}' AND ff_id='{$_GET["id"]}';"))[0];
@@ -37,12 +37,11 @@
 			} else $which = $check["image_served"];
 		
 			$url = $result["option_" . $which];
+
+			if (!startsWith($url, "http://") and !startsWith($url, "https://")) $url = "http://" . $url;
 			pg_query($dbconn,"UPDATE data SET stats_option_{$which}=stats_option_{$which} + 1 WHERE id='{$_GET["id"]}';");
 			pg_query($dbconn,"UPDATE data SET views=views + 1 WHERE id='{$_GET["id"]}';");
-			print($url);
-			//var_dump(preg_match_all("^http(s)?:\/\/.*", $url, $matches));
-			//strstr("http(s)?://", needle)
-			//header("Location: " . $url, true, 302);
+			header("Location: " . $url, true, 302);
 			die();
 		}
 	}
@@ -54,6 +53,7 @@
 <html>
 	<head>
 		<title>fifty/50</title>
+		<meta name="theme-color" content="#2B303B">
 		<!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>-->
 		<link rel="stylesheet" type="text/css" href="/style/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="/style/style.css">
