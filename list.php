@@ -3,9 +3,10 @@
 <html>
 	<head>
 		<title>fifty/50 - [all]</title>
+		<meta name="theme-color" content="#2B303B">
 		<link rel="stylesheet" type="text/css" href="/style/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="/style/style.css">
-		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	</head>
 	<body>
 		<a class="title dark-bg" href="/"><span>FIFTY</span><span>/</span><span>50</span></a>

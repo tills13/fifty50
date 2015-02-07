@@ -1,7 +1,6 @@
 <?php
 	include_once("php/functions.php");
 	$dbconn = pg_connect($_ENV["DATABASE_URL"]);
-	//$dbconn = pg_connect("dbname=5050 user=_www");
 	if (isset($_GET["id"]) and ($_GET["id"] != "")) $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data WHERE id='{$_GET["id"]}'"))[0];
 	else $result = pg_fetch_all(pg_query($dbconn, "SELECT * FROM data ORDER BY random() LIMIT 1;"))[0];
 
@@ -18,9 +17,10 @@
 <html>
 	<head>
 		<title>fifty/50 [<?=$result["id"]?>]</title>
+		<meta name="theme-color" content="#2B303B">
 		<link rel="stylesheet" type="text/css" href="/style/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="/style/style.css">
-		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	</head>
 	<body>
 		<a class="title dark-bg" href="/"><span>FIFTY</span><span>/</span><span>50</span></a>
